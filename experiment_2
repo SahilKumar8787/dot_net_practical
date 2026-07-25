@@ -1,0 +1,135 @@
+using System;
+
+// Interface
+interface IPayroll
+{
+    double CalculateSalary();
+}
+
+// Abstract Parent Class
+abstract class Employee : IPayroll
+{
+    protected int empId;
+    protected string empName;
+    protected string department;
+
+    public Employee(int id, string name, string dept)
+    {
+        empId = id;
+        empName = name;
+        department = dept;
+    }
+
+    public void DisplayDetails()
+    {
+        Console.WriteLine("\n======================================");
+        Console.WriteLine("Employee ID   : " + empId);
+        Console.WriteLine("Employee Name : " + empName);
+        Console.WriteLine("Department    : " + department);
+    }
+
+    public abstract double CalculateSalary();
+}
+
+// Full Time Employee
+class FullTimeEmployee : Employee
+{
+    double basicSalary, bonus;
+
+    public FullTimeEmployee(int id, string name, string dept,
+                            double salary, double bonus)
+        : base(id, name, dept)
+    {
+        basicSalary = salary;
+        this.bonus = bonus;
+    }
+
+    public override double CalculateSalary()
+    {
+        double tax = basicSalary * 0.10; //10% Tax
+        return basicSalary + bonus - tax;
+    }
+}
+
+// Part Time Employee
+class PartTimeEmployee : Employee
+{
+    int hoursWorked;
+    double hourlyRate;
+
+    public PartTimeEmployee(int id, string name, string dept,
+                            int hours, double rate)
+        : base(id, name, dept)
+    {
+        hoursWorked = hours;
+        hourlyRate = rate;
+    }
+
+    public override double CalculateSalary()
+    {
+        return hoursWorked * hourlyRate;
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        Console.WriteLine("========== Employee Payroll System ==========\n");
+
+        Employee[] employees = new Employee[2];
+
+        // Full Time Employee Input
+        Console.WriteLine("Enter Full-Time Employee Details");
+        Console.Write("Employee ID : ");
+        int id = Convert.ToInt32(Console.ReadLine());
+
+        Console.Write("Name : ");
+        string name = Console.ReadLine();
+
+        Console.Write("Department : ");
+        string dept = Console.ReadLine();
+
+        Console.Write("Basic Salary : ");
+        double salary = Convert.ToDouble(Console.ReadLine());
+
+        Console.Write("Bonus : ");
+        double bonus = Convert.ToDouble(Console.ReadLine());
+
+        employees[0] = new FullTimeEmployee(id, name, dept, salary, bonus);
+
+        Console.WriteLine();
+
+        // Part Time Employee Input
+        Console.WriteLine("Enter Part-Time Employee Details");
+        Console.Write("Employee ID : ");
+        id = Convert.ToInt32(Console.ReadLine());
+
+        Console.Write("Name : ");
+        name = Console.ReadLine();
+
+        Console.Write("Department : ");
+        dept = Console.ReadLine();
+
+        Console.Write("Hours Worked : ");
+        int hours = Convert.ToInt32(Console.ReadLine());
+
+        Console.Write("Hourly Rate : ");
+        double rate = Convert.ToDouble(Console.ReadLine());
+
+        employees[1] = new PartTimeEmployee(id, name, dept, hours, rate);
+
+        // Payroll Report
+        Console.WriteLine("\n\n========== Payroll Report ==========");
+
+        foreach (Employee emp in employees)
+        {
+            emp.DisplayDetails();
+            Console.WriteLine("Net Salary : ₹" + emp.CalculateSalary());
+        }
+
+        Console.WriteLine("\n======================================");
+        Console.WriteLine("Payroll Generated Successfully!");
+        Console.ReadKey();
+    }
+}
